@@ -125,3 +125,32 @@ Problème:
 
 *Quels ordonnancements des transactions ne posent pas de problème ?*
 
+On va faire un ordonnancement sériel (chaque instruction s'exécute à la suite). Garantit la cohérence mais aucun parallélisme.
+Ordonnances sérialisables: un ordonnancement qui est équivalent à un ordonnancement sériel.
+
+**Deux ordonnancements sont équivalents s'ils ont le même effet sur la base.**
+
+*Comment savoir si un ordonnancement est sérialisable ?*
+
+Exemple:  
+T1: (T1,R,A), (T1,W,A), (T1,R,B), (T1,W,B)  
+T2: (T2,R,A), (T2,W,A)
+
+O1: (T1,R,A), (T1,W,A), (T1,R,B), (T1,W,B), (T2,R,A), (T2,W,A) -> *seriel*  
+O2: (T1,R,A), (T1,W,A), (T2,R,A), (T2,W,A), (T1,R,B), (T1,W,B) -> *serialisable*  
+O3: (T1,R,A), **(T2,R,A), (T2,W,A)**, (T1,W,A), (T1,R,B), (T1,W,B) -> *On doit bouger la partie surlignée au début ou à la fin. Pas sérialisable.*
+
+**Deux opérations de deux transactions différentes (O1 de T1 et P2 de T2) sont conflictuelles si l'exécution des deux séquences \<O1,O2>
+ et \<O2,O1> est susceptible de produire des résultats différents.**
+
+ Comme ici on n'utilise que les instructions R et W, on a des opérations conflictuelles que si elles accèdent à la même entité et qu'au moins un des deux accès est une écriture.  
+ \<O1,O2> est appelé une liste séquentielle.
+
+** Méthode pour détecter les ordonnancements sérialisables:**  
+_Proposition:_ Un ordonnancement est sérialisable si et seulement s'il peut peut être transformé en un ordonnancement sériel par permutations successives d'opérations ne constituant pas une paire conflictuelle.
+
+**Autre Méthode: Graphe de dépendances**  
+Les noeuds du graphe sont les transactions.  
+Les arcs sont tracés en fonction des paires conflictuelles. 
+
+Un ordonnancement est sérialisable si et seulement si le graphe de dépendances est acyclique.
