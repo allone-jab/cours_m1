@@ -1,10 +1,14 @@
 # M1 Courses
 
-This repository will contain the following courses:
+Ce répertoire contient les cours suivants:
 
-* [Centralized OS](https://github.com/ToDelattre/cours_m1/tree/master/Centralized%20OS)
-* [Databases](https://github.com/ToDelattre/cours_m1/tree/master/Databases)
-* [English](https://github.com/ToDelattre/cours_m1/tree/master/English)
-* [Logic](https://github.com/ToDelattre/cours_m1/tree/master/Logic)
-* [Networks](https://github.com/ToDelattre/cours_m1/tree/master/Networks)
-* [Software Engineering](https://github.com/ToDelattre/cours_m1/tree/master/Software%20Engineering)
+## Semestre 1
+
+* [Anglais](https://github.com/ToDelattre/cours_m1/tree/master/Anglais)
+* [Bases de Données](https://github.com/ToDelattre/cours_m1/tree/master/Bases%20de%20Données)
+* [Génie Logiciel](https://github.com/ToDelattre/cours_m1/tree/master/Software%20Engineering)
+* [Logique & Calculabilité](https://github.com/ToDelattre/cours_m1/tree/master/Logique)
+* [Réseaux](https://github.com/ToDelattre/cours_m1/tree/master/Réseaux)
+* [Système d'Exploitation Centralisés](https://github.com/ToDelattre/cours_m1/tree/master/Systèmes%20d'Exploitation%20Centralisés)
+
+## Semestre 2
