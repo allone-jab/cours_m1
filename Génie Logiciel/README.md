@@ -1,13 +1,15 @@
 # Génie Logiciel
 
-## Infos
-
-### Général
+## Général
 
 * Contrôle Continu
 * Mot de Passe PDFs: master2019
 
-### Pas Cours
+## Notes
+
+* Une note par séance
+
+## Pas Cours
 * 28/10
 * 11/11
 * 2/12
