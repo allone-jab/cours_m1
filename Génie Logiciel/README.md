@@ -4,6 +4,7 @@
 
 * Contrôle Continu
 * Mot de Passe PDFs: master2019
+* Moodle: [lien](http://moodle.univ-artois.fr/cours/course/view.php?id=396)
 
 ## Notes
 
