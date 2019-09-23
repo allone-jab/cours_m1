@@ -59,6 +59,8 @@ dkms.conf
 # TARGETS
 #   Linux
 Système d'Exploitation Centralisés/TP/TP1/cm
+Système d'Exploitation Centralisés/TP/TP1/tete
+Système d'Exploitation Centralisés/TP/TP1/queue
 
 #   Windows
 *.exe
