@@ -4,7 +4,7 @@
 
 ### Codage tout-ou-rien
 
-1. `SCH`
+1. ![Schema1](Schemas/SCH1.png)
 2. Valence de **2** car **2 états**.
 3.   
    |Inconvénients|
@@ -19,21 +19,21 @@
 
 1. L'absence de message est codé par un courant négatif.
 2. Valence de **2**.
-3. `SCH`
+3. ![Schema2](Schemas/SCH2.png)
 4. Inconvénients *c* et *d*.
 
 ### Codage Bipolaire
 
 1. Inconvénients *c* et *d*.
 2. Valence de **3**.
-3. `SCH`
+3. ![Schema3](Schemas/SCH3.png)
 4. Inconvénient *a*.
 
 ### Codage Manchester
 
 1. Tous les inconvénients sont résolus
 2. Valence de **2**.
-3. `SCH`
+3. ![Schema4](Schemas/SCH4.png)
 4. On réduit le débit à cause du codage binaire. Chacun possède deux états.
 
 ## Exercice 2: Codage Manchester
