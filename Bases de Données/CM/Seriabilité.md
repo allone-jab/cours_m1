@@ -32,11 +32,11 @@ Donc un verrou en lecture permet à d'autres transactions de poser le même verr
 Aucune opération de verrouillage (LOCK) ne peut suivre une opération de déverrouillage (UNLOCK).  
     $\rightarrow$ 2 phases: verrouillage puis déverrouillage.
 
-`SCH 2`
+![Schema 2](../CM/Schemas/SCH2.jpg)
 
 ## Problèmes possibles avec 2PL(non strict): avortements en cascade
 
-`SCH 3`
+![Schema 3](../CM/Schemas/SCH3.jpg)
 
 _Problème_: T$_2$ a validé mais a utilisé une donnée modifiée par T$_1$ qui a avorté:
 * Perte de la cohérence de la base
@@ -61,7 +61,7 @@ Donc:
 
 ## Problèmes avec 2PL: Deadlock
 
-`SCH 4`
+![Schema 4](../CM/Schemas/SCH4.jpg)
 
 2 solutions possibles:
 + éviter les blocages (difficile, performances)
@@ -120,3 +120,76 @@ $\rightarrow$ garantie de cohérence et d'isolation (propriétés ACID)
     * c = R $\lt$ H ou c = R $\le$ H: Une version A$^H_H$ est crée (avec la valeur écrite)
     * c $\le$ H $\lt$ R: La transaction T$_R$, plus récente que T$_H$, a déjà lu la donnée.  
     $\rightarrow$ T$_H$ ne doit pas modifier A$^R_C$ afin de garantir l'isolation de T$_R$ $\rArr$ T$_H$ est avortée.
+
+## Exercice
+
+Soit l'ordonnancement suivant:  
+(T$_1$, R, A),(T$_1$, W, A),(T$_2$, R, A),(T$_2$, W, A),(T$_1$, R, B),(T$_1$, W, B),(T$_2$, R, B),(T$_2$, W, A)  
+
+1. Quelles sont les paires conflictuelles ?  
+> Les paires conflictuelles sont les opérations <O$_1$, O$_2$> de transactions différentes pouvant présenter un résultat différent si leur ordre est inversé.
+>Ici, les paires conflictuelles sont:  
+><1,4> <2,3> <2,4> <5,8> <6,7> <6,8>
+
+2. Graph de dépendance
+
+>En utilisant les paires conflictuelles, on obtient le graph de dépendance suivant:  
+>$$T_1 \rightarrow T_2$$
+>On obtient ce résultat en vérifiant l'ordre créé par toutes les paires conflictuelles.
+
+3. L'ordonnancement est-il sérialisable ?
+
+> Grâce au graph obtenu dans la question précédente, on peut constater qu'il n'y a pas de cycle. Donc il est sérialisable.
+
+4. Est-il accepté par 2PL ?
+
+`|   #   | T$_1$ | T$_2$ | Action |`
+`| :---: | :---: | :---: | :----: | `
+`|   1   | (R,A) |       | LOCK(A,W)`
+`|   2   | (W,A) |       | UNLOCK(A)`
+`|   3   |       | (R,A) | LOCK(A,W)`
+`|   4   |       | (W,A) | UNLOCK(A)`
+`|   5   | (R,B) |       |`
+`|   6   | (W,B) |       |`
+`|   7   |       | (R,B) |`
+`|   8   |       | (W,B) |`
+
+5. 2PL strict ?
+
+> Non, car il y a un UNLOCK au milieu qui ne peut pas être déplacé.
+
+6. Est-il accepté par estampillage ?
+
+>|  Transaction  | Modification Estampillage |
+>| :-----------: | :-----------------------: |
+>| (T$_1$, R, A) |        RTM(A) = 1         |
+>| (T$_1$, W, A) |        WTM(A) = 1         |
+>| (T$_2$, R, A) |        RTM(A) = 2         |
+>| (T$_2$, W, A) |        WTM(A) = 2         |
+>| (T$_1$, R, B) |        RTM(B) = 1         |
+>| (T$_1$, W, B) |        WTM(B) = 1         |
+>| (T$_2$, R, B) |        RTM(B) = 2         |
+>| (T$_2$, W, B) |        WTM(B) = 2         |
+>
+>*On tient compte des estampillage ainsi:*  
+>
+>| Est*  |    A    |    B    |
+>| :---: | :-----: | :-----: |
+>|  RTM  | ~~1~~ 2 | ~~1~~ 2 |
+>|  WTM  | ~~1~~ 2 | ~~1~~ 2 |
+
+7. Par MVC ?
+
+> On suppose qu'on a une version 0 de toutes les bases.
+>|   #   |                    Versions                     |
+>| :---: | :---------------------------------------------: |
+>|   0   |                 $A^0_0$ $B^0_0$                 |
+>|   1   |                 $A^1_0$ $B^0_0$                 |
+>|   2   |             $A^1_0$ $A^1_1$ $B^0_0$             |
+>|   3   |             $A^1_0$ $A^2_1$ $B^0_0$             |
+>|   4   |         $A^1_0$ $A^2_1$ $A^2_2$ $B^0_0$         |
+>|   5   |         $A^1_0$ $A^2_1$ $A^2_2$ $B^1_0$         |
+>|   6   |     $A^1_0$ $A^2_1$ $A^2_2$ $B^1_0$ $B^1_1$     |
+>|   7   |     $A^1_0$ $A^2_1$ $A^2_2$ $B^1_0$ $B^2_1$     |
+>|   8   | $A^1_0$ $A^2_1$ $A^2_2$ $B^1_0$ $B^2_1$ $B^2_2$ |
+> OK
