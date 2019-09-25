@@ -96,10 +96,67 @@ On définit:
     0 = Card($\empty$)  
     1 = Card({$\empty$})  
     2 = Card({$\empty$, {$\empty$}}) = Card({0,1})  
-    ...
+    ...   
+    $\forall n \ge 1 = Card({0,1,...,n-1})$
 
 ### Cardinaux infinis
 
 Par exemple, soir E = $N \cup$ {a}, avec a $\notin N$. Soif $f$ l'application de E dans $N$ définie par:  
 $\forall e \in E$ si e = a alors $f(e) =0$  
 si $e \neq a$ alors $f(e) = e+1$ 
+
+On a $Card(E)=Card(\natnums)+1$  
+$\natnums$ est équivalent a une de ses parties parties propres, ce qui caractérise des **ensembles infinis**.  
+
+Un ensemble est **dénombrable** quand il est équipotent à une partie finie ou non de $\natnums$.  
+Un ensemble est **indénombrable** quanf il est équipotent à $\natnums$.  
+
+Par définition, on a qu'un ensemble E est:
+* dénombrable quand $Card(E) \le Card(\natnums)$
+* Infini dénombrable quand $Card(E) = Card(\natnums)$  
+
+
+> $Card(\natnums)$ est le plus petit cardinal transfini.
+
+**Proposition:**
++ $\forall n\in\natnums, n \lt Card(\natnums)$
++ E est infini si, et seulement si, $Card(\natnums) \le Card(E)$
+
+Il existe une infinit de cardinaux transfinis plus grands que $Card(\natnums)$. Ceci est une conséquence du théorème de Cantor suivant:  
+
+**Théorème**: Pour tout ensemble E, on a:
+
+$$Card(E) \lt Card(\mathscr{P}(E))$$
+
+### Ensembles Infinis Dénombrables
+
+On a $\natnums\times\natnums$ est indéfini dénombrable, donc $Card(\natnums)\times Card(\natnums)=Card(\natnums)$. De façon générale, *tout produit cartésioen d'une famille finie d'ensemble dénombrable est dénombrable*.
+
+$\mathbb{Z}$ est infini dénombrable.  
+Montrer qu'on a une bijection entre $\mathbb{Z}$ et $\natnums$. A-t-on $Card(\mathbb{Z}) = Card(\natnums)$ ?
+
+$f:\mathbb{Z}\rightarrow \natnums$  
+$n \rightarrow \text{si } n \le 0, -2n$
+$\text{si } n \gt 0, 2n-1$  
+est une bijection.  
+$\mathbb{Z}\cup\natnums\times\natnums$ est infini dénombrable, plus généralement:  
+*la réunion débrable d'ensembles dénombrables est dénombrable.*
+
+**Propriétés**:  
+* si A $\subseteq$ B avec B dénombrable, alors A l'est aussi.
+* si le domaine d'une fonction est dénombrable, alors son image l'est aussi.
+
+### Puissance du continu
+
+Cantor a prouvé que:  
+**Théorème**: Pour tout ensemble E, on a:
+$$Card(\mathscr{P}(E)) = 2^{Card(E)}$$
+
+Il a également prouvé que:  
+$$Card(\reals) = Card(\mathscr{P}(\natnums))$$
+
+>**$\reals$ est-il dénombrable ?**
+>
+> On considère $]0,1[\ \subseteq \reals$
+>
+> Chaque $r\in\ ]0,1[\ \subseteq \reals$ peut s'écrire selon son développement décimal, donc sous la forme $r = 0,r^1r^2...$
