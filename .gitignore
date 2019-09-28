@@ -58,10 +58,5 @@ dkms.conf
 
 # TARGETS
 #   Linux
-Système d'Exploitation Centralisés/TP/TP1/cm
-Système d'Exploitation Centralisés/TP/TP1/tete
-Système d'Exploitation Centralisés/TP/TP1/queue
-Réseaux/TP/TP2/errors
-
-#   Windows
-*.exe
+Système d'Exploitation Centralisés/TP/TP1/bin/
+Réseaux/TP/TP2/bin/
