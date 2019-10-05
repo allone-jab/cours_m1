@@ -22,7 +22,7 @@
 #define SOCKET_ERROR 1
 #define BIND_ERROR 2
 
-char** errors_tab;
+extern char** errors_tab;
 
 #define syserror(m,e) perror(errors_tab[e]);
 #define neterror(n) syserror(errors_tab[n], n);

@@ -1,10 +1,3 @@
-/**
-* TP 2
-* \file errors.c
-* \brief résumé
-* \author Tony Delattre
-*/
-
 #include "headers/errors.h"
 #include "headers/server.h"
 
@@ -21,7 +14,7 @@ Server server_create_udp() {
     }
 
     server->server.sin_family = AF_INET;
-    server->server.sin_addr.s_addr = INADDR_ANY;
+    server->server.sin_addr.s_addr = "127.0.0.1";
     server->server.sin_port = PORT;
 
     return server;
@@ -57,16 +50,14 @@ int main(){
     server_bind(server, PORT);
     for(;;){
 
-        // réception d'un message:
         server_receive_udp(server, buffer, MAX);
 
-        //si le message est PING alors on retourne au client PONG
         if(strcmp("PING", buffer) == 0){
             msg = "PONG";
-        }else{//Sinon le message à retourner est PAS PONG 
+        }else{
             msg = "PAS PONG";
         }
-        
+
         //On envoie le msg
         server_send_udp(server, msg);
         
