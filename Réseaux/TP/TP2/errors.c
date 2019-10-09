@@ -1,0 +1,1 @@
+char* msgErr[] = {"No error", "Error when creating Socket", "Error when Binding", "Error when Sending Message"};

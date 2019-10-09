@@ -1,12 +1,17 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include "netinet/in.h"
+#include <zconf.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 struct _client {
     int fd;
     struct sockaddr_in sock_addr;
     socklen_t sock_len;
+    
     ssize_t (*client_receive) (struct _client**, char*, size_t);
     void (*client_send) (struct _client*, char*);
 };
