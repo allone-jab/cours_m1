@@ -238,3 +238,4 @@ Soient un site initiateur et n sites distants.
 #### Schema Exemple
 
 ![SCH9](../CM/Schemas/SCH9.jpg)
+
