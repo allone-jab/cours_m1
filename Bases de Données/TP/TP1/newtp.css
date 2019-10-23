@@ -1,0 +1,104 @@
+
+body {
+    font-family : sans-serif;
+    font-size : 0.95em;  
+    color : black; 
+    background-color : #666;  
+ }
+
+
+article { 
+    /* border-style : solid;
+       border-color : blue;
+       padding : 1em 2em;
+       margin-bottom : 1em; */
+    margin-bottom : 1em;
+    margin-left : 1em;
+    color : black;
+    width : 90%;
+    background-color :#ddd;
+    padding-bottom : 0.3em;
+    counter-reset : exercice;
+}
+
+
+article.theme>p {
+    padding : 0.3em;
+}
+
+article>h1 { 
+    /* background-color : lightgray;*/
+    padding : 0.3em;
+    border-bottom : solid 0.1em;
+    /* border-left : solid 0.1em;*/
+    clear : none;
+    margin-top : 0;
+ }
+
+section.exercice>h1 {
+    display: inline;
+    font-size: 100%;
+}
+
+.exercice { 
+    background-color :white;
+    padding : 1em;
+    margin : 1em;
+    counter-reset : cptFigures;
+ }
+
+section[class~="aRendre"] h1{
+    color: red;
+}
+
+figcaption:before{ 
+    counter-increment:cptFigures; 
+    content : "Fig. " counter(cptFigures) " : ";
+    font-weight : bold;
+ }
+
+.exercice:before{ 
+    counter-increment:exercice;
+    content : "Exercice " counter(exercice) " : ";
+    font-weight : bold;
+ }
+
+header { 
+    font-size : 1.2em;
+    margin-bottom : 2em;
+    color : white;
+    padding-top : 0.4em;
+    padding : 0.4em;
+ }
+
+header>h1{
+    padding : 0;
+    font-size: 200% ; 
+    margin : 0;
+}
+
+.exercice[tag="SIA"]:before {
+    content : "Exercice (ILI et SIA) : ";
+    font-weight : bold;   
+}
+
+pre { 
+    background-color : #eee;
+} 
+
+li { 
+    padding-bottom : 0.5em;
+ }
+
+.exercice img {
+    max-width : 400pt;
+}
+
+img {
+    border-style : none;
+}
+
+.nouveau {
+    color : red;   
+}
+

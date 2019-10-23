@@ -1,0 +1,286 @@
+<!DOCTYPE  html>
+<html>
+  <head>
+    <meta name="author" content="Anne Parrain" />
+    <meta charset="utf-8" />
+    <link type="text/css" title="new" rel="stylesheet" href="newtp.css" />
+    <link type="text/css" title="old" rel="alternate stylesheet" href="tp.css" />
+    <title>Master 1 Info : BD-TP1</title>
+  </head>
+
+<body>
+
+<header>
+<h1>Travaux pratiques 1 -- Fonctions</h1>
+</header>
+
+
+<article class="theme">
+<h1>Pour commencer</h1>
+
+<section class="exercice">
+<h1>Démarrage avec l'environnement de PostgreSQL</h1>
+
+<p>
+Connectez-vous sur le serveur de la faculté.
+</p>
+<code><pre>
+$ ssh slinux3
+</pre><code>
+
+<p>
+Une fois sur le serveur <code>slinux3</code>, connectez-vous sur PostgreSQL et modifiez votre mot de passe :
+<code><pre>
+$ psql
+vous=> alter user 'nom_utilisateur' password 'nouveau_mot_de_passe';
+vous=> \q
+</pre></code>
+
+<p>
+Reconnectez-vous.
+Testez les commandes suivantes pour vous familiariser avec l'environnement de PostgreSQL :
+<code><pre>
+$ psql
+db=> \d
+db=> \dt
+db=> \h
+db=> \h select
+db=> \h create function
+</pre></code>
+</p>
+</section>
+      
+<section class="exercice">
+<h1>Création de la base de données</h1>
+
+<p>
+Créez une nouvelle base qui portera le nom de <code>m1bd_votrenom_biblio</code>, où "votrenom" correspond à votre nom de famille, puis connectez vous sur cette nouvelle base.
+<code><pre>
+db=> create database m1bd_votrenom_biblio;
+CREATE DATABASE
+db=> \c m1bd_votrenom_biblio
+Vous êtes maintenant connecté à la base de données « m1bd_votrenom_biblio ».
+</pre></code>
+</p>
+
+<p>
+Téléchargez le fichier de création <a href="create_biblio.sql">create_biblio.sql</a> et de peuplement <a href="insert_biblio.sql">insert_biblio.sql</a> des tables.
+Ensuite, créez et peuplez vos tables :
+</p>
+<code><pre>
+bdm1_votrenom_biblio=> \! pwd
+/home/vous
+bdm1_votrenom_biblio=> \cd repertoire
+bdm1_votrenom_biblio=> \i 'create_biblio.sql'
+CREATE TABLE
+...
+bdm1_votrenom_biblio=> \i 'insert_biblio.sql'
+...
+INSERT 0 1
+bdm1_votrenom_biblio=>
+</pre></code>
+<p>
+Ça y est, vous êtes prêts pour travailler.
+</p>
+</section>
+</article>
+
+<article class="theme">
+<h1>Écrire des fonctions...</h1>
+
+<p>
+Vous devrez écrire vos fonctions soit en SQL, soit en PL/pgSQL dans un fichier <code>fonctions_biblio.sql</code> édité à côté (à l'aide de votre éditeur préféré, <code>gedit</code> par exemple) et que vous re-chargerez à chaque nouvelle fonction dans votre base.
+Le fichier créé doit être déposé sur Moodle.
+</p>
+
+<p>
+Le résultat attendu de l'exécution de chaque fonction est donné après l'énoncé.
+(N'oubliez donc pas de tester vos fonctions, c.-à-d., écrire une ou plusieurs requêtes appelant votre fonction pour vérifier ses résultats.)
+</p>
+
+<section class="exercice">
+<p>
+Écrire une fonction <code>nbre_exemplaires</code> qui retourne le nombre de livres associés à une oeuvre.<br>
+Ci-dessous, le résultat pour chaque oeuvre.
+<code><pre>
+           titre           | nbre_exemplaires 
+---------------------------+------------------
+ Le soleil des Scorta      |                3
+ Le chemin des âmes        |                2
+ Bienvenue au club         |                1
+ Le cercle fermé           |                1
+ Et mon mal est délicieux  |                1
+ Sous les vents de Neptune |                1
+ Dans les bois éternels    |                2
+ Effroyables jardins       |                0
+ La perle et le croissant  |                3
+(9 rows)
+</pre></code>
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrire une fonction <code>est_emprunte</code> qui retourne un booléen suivant qu'un livre est actuellement emprunté ou non.<br>
+Ci-dessous le résultat pour chaque livre.
+<code><pre>
+ id_livre |           titre           | est_emprunte 
+----------+---------------------------+--------------
+        1 | Le soleil des Scorta      | f
+        2 | Le soleil des Scorta      | f
+        3 | Le soleil des Scorta      | f
+        4 | Le chemin des âmes        | f
+        5 | Bienvenue au club         | t
+        6 | Le chemin des âmes        | t
+        7 | Le cercle fermé           | f
+        8 | Et mon mal est délicieux  | f
+        9 | Sous les vents de Neptune | t
+       10 | Dans les bois éternels    | t
+       11 | Dans les bois éternels    | t
+       12 | La perle et le croissant  | t
+       13 | La perle et le croissant  | f
+       14 | La perle et le croissant  | f
+(14 rows)
+</pre></code>
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrire une fonction <code>livres_presents</code> qui retourne les livres actuellement présents sur les rayons de la bibliothèque.
+<code><pre>
+ id_livre |          titre           
+----------+--------------------------
+        1 | Le soleil des Scorta
+        2 | Le soleil des Scorta
+        3 | Le soleil des Scorta
+        4 | Le chemin des âmes
+        7 | Le cercle fermé
+        8 | Et mon mal est délicieux
+       13 | La perle et le croissant
+       14 | La perle et le croissant
+(8 rows)
+</pre><code>
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrire une fonction <code>nbre_emprunts</code> qui retourne le nombre de livres actuellement empruntés associés à une même oeuvre.<br>
+Ci dessous, le résultat pour chaque livre.
+<code><pre>
+           titre           | nbre_emprunts 
+---------------------------+---------------
+ Le soleil des Scorta      |             0
+ Le chemin des âmes        |             1
+ Bienvenue au club         |             1
+ Le cercle fermé           |             0
+ Et mon mal est délicieux  |             0
+ Sous les vents de Neptune |             1
+ Dans les bois éternels    |             2
+ Effroyables jardins       |             0
+ La perle et le croissant  |             1
+(9 rows)
+</pre></code>
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrire une fonction <code>les_plus_empruntes</code> qui retourne les <code>n</code> oeuvres les plus empruntées en prenant en compte aussi les anciens emprunts dans <code>histoemprunt</code>.
+En cas d'égalité, on rangera les oeuvres par ordre alphabétique sur leur titre.<br>
+Ci-dessous, les 3 oeuvres le plus empruntés.
+<code><pre>
+           titre           
+---------------------------
+ Le chemin des âmes
+ Le soleil des Scorta
+ Sous les vents de Neptune
+(3 rows)
+</pre></code>
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrire une fonction <code>infos_oeuvre</code> qui, pour une oeuvre donnée, retourne une chaîne de caractères qui contient des informations sur cette oeuvre.
+Si l'oeuvre est écrite par une seule personne, alors la chaîne retournée devra être <em>Titre : Le titre de l'oeuvre - Auteur : Le nom de l'auteur</em>;
+si l'oeuvre a été écrite par plusieurs personnes, alors la chaîne retournée sera <em>Titre : Le titre de l'oeuvre - Auteurs : Le nom du premier auteur et al.</em>.<br>
+Ci dessous, le résultat pour chaque oeuvre.
+<code><pre>
+ id_oeuvre |                         infos_oeuvre                         
+-----------+--------------------------------------------------------------
+         1 | Titre : Le soleil des Scorta - Auteur : Gaude
+         2 | Titre : Le chemin des âmes - Auteur : Boyden
+         3 | Titre : Bienvenue au club - Auteur : Coe
+         4 | Titre : Le cercle fermé - Auteur : Coe
+         5 | Titre : Et mon mal est délicieux - Auteur : Quint
+         6 | Titre : Sous les vents de Neptune - Auteur : Vargas
+         7 | Titre : Dans les bois éternels - Auteur : Vargas
+         8 | Titre : Effroyables jardins - Auteur : Quint
+         9 | Titre : La perle et le croissant - Auteurs : Fernandez et al
+(9 rows)
+</pre></code>
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Vous devez maintenant modifier votre base et ajouter un champ <code>empruntable</code> de type booléen à la table <code>livre</code>.
+Ce champ devra prendre la valeur <code>True</code> par défaut.
+Ce champ permettra d'exclure du prêt un exemplaire de chaque oeuvre bien représentée dans la bibliothèque.
+<code><pre>
+ id_livre |           titre           | empruntable 
+----------+---------------------------+-------------
+        3 | Le soleil des Scorta      | t
+        2 | Le soleil des Scorta      | t
+        1 | Le soleil des Scorta      | t
+        6 | Le chemin des âmes        | t
+        4 | Le chemin des âmes        | t
+        5 | Bienvenue au club         | t
+        7 | Le cercle fermé           | t
+        8 | Et mon mal est délicieux  | t
+        9 | Sous les vents de Neptune | t
+       11 | Dans les bois éternels    | t
+       10 | Dans les bois éternels    | t
+       14 | La perle et le croissant  | t
+       13 | La perle et le croissant  | t
+       12 | La perle et le croissant  | t
+(14 rows)
+</pre><code>
+</p>
+</section>
+
+<section class="exercice">
+<p>Écrire une fonction <code>sort_du_pret</code> qui, pour une oeuvre donnée, positionne à <code>False</code> ce champ <code>empruntable</code> si l'oeuvre possède au moins trois exemplaires dans la base, et il en existe au moins un qui n'est pas emprunté actuellement.
+Dans ce cas, c'est l'exemplaire de l'oeuvre non emprunté avec le plus petit identifiant dont on bascule le champ <code>empruntable</code> à faux.
+Appelez cette fonction pour que ce travail soit effectué sur tous les livres de la base.
+</p>
+
+<p>Comment faire pour que cette fonction puisse être régulièrement appelée sans provoquer l'exclusion du prêt de plusieurs livres pour une même oeuvre ?
+Modifiez votre fonction.<br>
+Ci dessous, le résultat après modification.
+<code><pre>
+ id_livre |           titre           | empruntable 
+----------+---------------------------+-------------
+        1 | Le soleil des Scorta      | f
+        3 | Le soleil des Scorta      | t
+        2 | Le soleil des Scorta      | t
+        6 | Le chemin des âmes        | t
+        4 | Le chemin des âmes        | t
+        5 | Bienvenue au club         | t
+        7 | Le cercle fermé           | t
+        8 | Et mon mal est délicieux  | t
+        9 | Sous les vents de Neptune | t
+       11 | Dans les bois éternels    | t
+       10 | Dans les bois éternels    | t
+       13 | La perle et le croissant  | f
+       14 | La perle et le croissant  | t
+       12 | La perle et le croissant  | t
+(14 rows)
+</pre></code>
+</p>
+</section>
+</article>
+</body>
+</html>
