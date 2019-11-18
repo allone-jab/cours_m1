@@ -1,5 +1,5 @@
 /*
-    Nombre d'exemplaire de l'oeuvre 
+    1. Nombre d'exemplaire de l'oeuvre 
 */
 CREATE OR REPLACE FUNCTION nb_exemplaires(id INTEGER) RETURNS BIGINT 
 AS $$
@@ -11,7 +11,7 @@ $$
 LANGUAGE SQL;
 
 /*
-    Si l'oeuvre est empruntée ou non
+    2. Si l'oeuvre est empruntée ou non
 */
 CREATE OR REPLACE FUNCTION est_emprunte(id INTEGER) RETURNS BOOLEAN
 AS $$
@@ -24,7 +24,7 @@ $$
 LANGUAGE SQL;
 
 /*
-    Livres présents dans la biblio
+    3. Livres présents dans la biblio
 */
 CREATE OR REPLACE FUNCTION livres_presents() RETURNS SETOF VARCHAR
 AS $$
@@ -35,7 +35,7 @@ $$
 LANGUAGE SQL;
 
 /*
-    Nombre d'emprunts pour un livre
+    4. Nombre d'emprunts pour un livre
 */
 CREATE OR REPLACE FUNCTION nbre_emprunts(in oeuvre) RETURNS setof record
 AS $$
@@ -46,7 +46,7 @@ $$
 LANGUAGE SQL;
 
 /*
-    Les top des livres les plus empruntés
+    5. Les top des livres les plus empruntés
 */
 CREATE OR REPLACE FUNCTION les_plus_empruntes(top INTEGER) RETURNS setof RECORD
 AS $$
@@ -57,8 +57,24 @@ $$
 LANGUAGE SQL;
 
 /*
-    Ajout de la colonne 'empruntable'
+    6. 
+*/
+CREATE OR REPLACE FUNCTION infos_oeuvre(o oeuvre) RETURNS TEXT
+AS $$
+    DECLARE
+        retour VARCHAR(255);
+        curs CURSOR FOR (SELECT * FROM oeuvreauteur NATURAL JOIN auteur where id_oeuvre = $1.id_oeuvre);
+    BEGIN
+    END;
+$$
+LANGUAGE PLPGSQL;
+
+/*
+    7. Ajout de la colonne 'empruntable'
 */
 ALTER TABLE livre DROP COLUMN empruntable
 ALTER TABLE livre ADD empruntable BOOLEAN DEFAULT TRUE
 
+/*
+    8. 
+*/
