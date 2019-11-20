@@ -1,0 +1,239 @@
+<!DOCTYPE  html>
+<html>
+<head>
+<meta name="author" content="Anne Parrain" />
+<meta charset="utf-8" />
+<link type="text/css" title="new" rel="stylesheet" href="newtp.css" />
+<link type="text/css" title="old" rel="alternate stylesheet" href="tp.css" />
+<title>Master 1 Info : BD-TP2</title>
+</head>
+
+<body>
+
+<header>
+<h1>Travaux pratiques 2 -- Encore des fonctions</h1>
+</header>
+
+<article class="theme">
+<h1>On boucle</h1>
+
+<section>
+<p>
+Créez une base de données <code>m1bd_votrenom_location</code>.
+Connectez-vous à votre nouvelle base.
+Récupérez les fichiers suivants <a href="create-location.sql">create-location.sql</a> et <a href="insert-location3.sql">insert-location.sql</a>.
+Créez les tables puis peuplez votre base.
+</p>
+<p>
+Vous devrez écrire vos fonctions soit en SQL, soit en PL/pgSQL dans un fichier fonctions_location.sql 
+Le fichier créé doit être déposé sur Moodle.
+
+Le résultat attendu de l'exécution de chaque fonction est donné après l'énoncé.
+(N'oubliez donc pas de tester vos fonctions, c.-à-d., écrire une ou plusieurs requêtes appelant votre fonction pour vérifier ses résultats.)
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui retourne le chiffre d'affaires d'une catégorie donnée (par son identifiant).
+Pour calculer le chiffre d'affaires, il faut compter le nombre de jours de chaque location et multiplier par le le prix par jour qui est dans la table <code>catégorie</code>.
+Donc, ne prennez pas en compte le <code>prix_location</code> de la table <code>contrat</code>.
+Finalment, pour le chiffre d'affaires, on ne regarde que les contrats terminés (c'est-à-dire, les contrat en litige, en cours, etc., ne sont pas pris en compte.)
+<pre><code>
+=> select libelle_categorie, chiffreaffaires( id_categorie ) from categorie;
+
+ libelle_categorie | chiffreaffaire 
+-------------------+----------------
+ simple            |            516
+ moyen             |            416
+ confort           |           1210
+ luxe              |              0
+ grand luxe        |            144
+(5 rows)
+</code></pre>
+</p>
+</section>
+
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui retourne une chaîne de caractères <em>inexistant</em>, <em>faible</em>, <em>moyen</em> ou <em>bon</em> à partir de l'identifiant d'une catégorie de voitures suivant que son
+chiffre d'affaires est :
+<ul>
+<li>nul : la réponse sera <em>inexistant</em>;</li>
+<li>inférieur à 500 euros : <em>faible</em>;</li>
+<li>inférieur à 1000 euros : <em>moyen</em>;</li>
+<li>supérieur ou égal à 1000 euros : <em>bon</em>. </li>
+</ul>
+</p>
+<pre><code>
+=> select libelle_categorie, evalca( id_categorie ) from categorie;
+
+ libelle_categorie |   evalca   
+-------------------+------------
+ simple            | moyen
+ moyen             | faible
+ confort           | bon
+ luxe              | inexistant
+ grand luxe        | faible
+(5 rows)
+</code></pre>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez ue fonction qu'affiche l'identifiant de chaque catégorie, son libellé, son chiffre d'affaires et le qualificatif associé.
+</p>
+<pre><code>
+=> select * from ca_categorie();
+
+ id |  libelle   |  ca  |   evalca   
+----+------------+------+------------
+  1 | simple     |  516 | moyen
+  2 | moyen      |  416 | faible
+  3 | confort    | 1210 | bon
+  4 | luxe       |    0 | inexistant
+  5 | grand luxe |  144 | faible
+(5 rows)
+</pre></code>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui retourne le nombre de jours sans location ni réservation entre deux dates données en paramètre.
+</p>
+<pre><code>
+=> select sanslocation('2001-01-01', '2017-01-01');
+
+sanslocation 
+--------------
+         4405
+(1 row)
+</code></pre>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui retourne le nombre de jours location.voiture entre deux dates données. On entend par là le nombre de jours de location multiplié par le nombre de voitures louées ce jour-là.
+</p>
+<p>
+Par exemple, si vous donnez un intervalle de deux jours, que le premier jour 3 voitures sont louées et que le second 4 voitures sont loués, la fonction retournera 7.
+</p>
+<pre><code>
+=> select cblocation('2001-01-01', '2017-01-01');
+
+ cblocation 
+------------
+       2027
+(1 row)
+</code></pre>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui retourne le prix d'une location donnée par son identifiant <code>id_contrat</code>.
+</p>
+<pre><code>
+=> select id_contrat, prixlocation( id_contrat ) from contrat;
+
+ id_contrat | prixlocation 
+------------+--------------
+          1 |           64
+          2 |          540
+          3 |          104
+          4 |          288
+          5 |          144
+          6 |          288
+          7 |           80
+          8 |          144
+          9 |           64
+         10 |          648
+         11 |          536
+         12 |          670
+         13 |          268
+         14 |          632
+         15 |         6108
+         16 |          536
+         17 |         4432
+         18 |           80
+         19 |           96
+         20 |         2024
+         21 |          110
+         22 |          288
+         23 |           48
+(23 rows)
+</code></pre>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui met à jour la colonne <code>prix_location</code> dans la table <code>contrat</code>.
+(En bas, les prix de location après la mise à jour.)
+</p>
+<pre><code>
+select * from contrat;
+ id_contrat | id_voiture | id_client | id_etat | date_debut |  date_fin  | prix_location 
+------------+------------+-----------+---------+------------+------------+---------------
+          1 |          1 |         1 |       3 | 2002-03-20 | 2002-03-27 |            64
+          2 |          2 |         1 |       3 | 2002-02-02 | 2002-03-27 |           540
+          3 |          3 |         2 |       3 | 2002-03-02 | 2002-03-27 |           104
+          4 |          4 |         2 |       3 | 2002-02-20 | 2002-03-27 |           288
+          5 |          5 |         2 |       3 | 2002-03-20 | 2002-03-27 |           144
+          6 |          1 |         3 |       5 | 2002-02-20 | 2002-03-27 |           288
+          7 |          2 |         4 |       4 | 2002-03-20 | 2002-03-27 |            80
+          8 |          3 |         4 |       3 | 2002-02-20 | 2002-03-27 |           144
+          9 |          4 |         5 |       3 | 2002-03-20 | 2002-03-27 |            64
+         10 |          5 |         5 |       5 | 2002-02-20 | 2002-03-27 |           648
+         11 |          1 |         5 |       4 | 2002-01-20 | 2002-03-27 |           536
+         12 |          2 |         6 |       3 | 2002-01-20 | 2002-03-27 |           670
+         13 |          3 |         6 |       3 | 2002-01-20 | 2002-03-27 |           268
+         14 |          3 |         6 |       1 | 2006-10-21 | 2007-03-27 |           632
+         15 |          3 |         5 |       4 | 2002-01-21 | 2006-03-27 |          6108
+         16 |          4 |         4 |       1 | 2006-01-20 | 2006-03-27 |           536
+         17 |          3 |         4 |       2 | 2002-10-07 | 2005-10-18 |          4432
+         18 |         11 |         7 |       4 | 2002-03-20 | 2002-03-27 |            80
+         19 |         12 |         8 |       1 | 2006-03-20 | 2006-03-27 |            96
+         20 |          4 |         8 |       2 | 2005-03-20 | 2005-11-27 |          2024
+         21 |         11 |         4 |       2 | 2005-10-31 | 2005-11-10 |           110
+         22 |         10 |         1 |       2 | 2005-09-27 | 2005-11-01 |           288
+         23 |         12 |         3 |       2 | 2005-10-25 | 2005-10-28 |            48
+(23 rows)
+</code></pre>
+</section>
+
+<section class="exercice">
+<p>
+On modifie la base <code>location</code>. Ajoutez une colonne <code>ristourne</code> à la table <code>client</code>.
+Par défaut, les clients n'ont pas de ristourne (i.e. une ristourne égale à 0.0).
+</p>
+</section>
+
+<section class="exercice">
+<p>
+Écrivez une fonction qui mettra à jour les ristournes.
+Les trois meilleurs clients (au sens du chiffre d'affaires qu'ils ont engendré), auront une réduction de 5%, et même 8% s'ils sont lensois.
+Les deux suivants auront 3% de réduction, et même 5% s'ils sont lensois.
+(En bas les ristournes après le changement.)
+</p>
+<pre>
+<code>
+select * from client;
+ id_client | nom_client | prenom_client | numero_rue |         rue         |      ville      | nbre_loc | ristourne 
+-----------+------------+---------------+------------+---------------------+-----------------+----------+-----------
+         3 | Dubois     | Paul          |          2 | rue basly           | lens            |        1 |         0
+         7 | Dulac      | Clementine    |         69 | rue henri Barbusse  | colombes        |        0 |         0
+         2 | Durant     | Pierre        |         23 | rue souvraz         | bully-les-mines |        3 |         0
+         5 | Laporte    | Jeannette     |        123 | rue de la bassee    | lens            |        3 |      0.08
+         4 | Dupuis     | Jacques       |          7 | rue lebas           | bethune         |        2 |      0.05
+         8 | Duronchon  | Henriette     |        367 | rue Volta Prolongee | courbevoie      |        0 |      0.05
+         6 | Cluzel     | Marcelle      |         56 | rue de bethune      | lens            |        2 |      0.05
+         1 | Dupont     | Jean          |         67 | rue lebas           | bethune         |        2 |      0.03
+(8 rows)
+</code>
+</pre>
+</section>
+</article>
+
+</body>
+
+</html>
