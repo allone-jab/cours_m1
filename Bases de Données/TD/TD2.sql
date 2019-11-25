@@ -2,12 +2,12 @@
 CREATE FUNCTION max_emprunts_3() RETURNS TRIGGER
 AS $$
     DECLARE
-        nb_emp INTEGER := select count(*) from emprunt where id_adherent = new.id_adherent
-    begin
-        if nb_emp < 3 then
+        nb_emp INTEGER := SELECT count(*) FROM emprunt WHERE id_adherent = new.id_adherent
+    BEGIN
+        IF nb_emp < 3 THEN
           return NEW;
-        end if;
-    end;
+        END IF;
+    END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER max_emprunt() BEFORE INSERT OR UPDATE
@@ -18,10 +18,10 @@ EXECUTE PROCEDURE max_emprunts_3();
 CREATE FUNCTION isBorrowed() RETURNS TRIGGER
 AS $$
     BEGIN
-        PERFORM * from emprunt where id_livre = new.id_livre
-        if FOUND then
+        PERFORM * FROM emprunt WHERE id_livre = new.id_livre
+        IF FOUND THEN
             return NEW;
-        end if;
+        END IF;
     END;
 $$ LANGUAGE plpgsql;
 
@@ -32,10 +32,11 @@ EXECUTE PROCEDURE isBorrowed();
 /* 3 */
 CREATE FUNCTION maj_histo() return TRIGGER
 AS $$ 
-    if date_emprunt != CURRENT_DATE then
-        insert into histoemprunt (id_adherent, id_livre, date_emprunt, date_retour)
-        values (old.id_adherent, old.id_livre, old.date_emprunt, CURRENT_DATE)
-    end if;
+    IF date_emprunt = CURRENT_DATE THEN
+        RETURN NULL;
+    END IF;
+    insert into histoemprunt (id_adherent, id_livre, date_emprunt, date_retour)
+    values (old.id_adherent, old.id_livre, old.date_emprunt, CURRENT_DATE)
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER retour BEFORE DELETE
@@ -44,12 +45,12 @@ EXECUTE PROCEDURE maj_histo();
 
 /* 4 */
 CREATE FUNCTION peutEmprunter() RETURNS TRIGGER
-as $$
+AS $$
     BEGIN
         PERFORM * FROM emprunt e, adherent a WHERE id_adherent = new.id_adherent AND (CURRENT_DATE < e.date_emprunt+21 OR a.amende_adherent > 0)
-        if FOUND then
+        IF FOUND THEN
             RETURN NEW;
-        end if;
+        END IF;
     END;
 $$ LANGUAGE plpgsql;
 
@@ -62,11 +63,11 @@ CREATE FUNCTION retard() RETURNS TRIGGER
 AS $$ 
     DECLARE 
         dec INTEGER := DATEDIFF(day, new.date_retour, new.date_emprunt)
-    begin
-        update adherent
-           set amende_adherent= amende_adherent + (dec%7)*2
-         where id_adherent = new.id_adherent
-    end;
+    BEGIN
+        UPDATE adherent
+           SET amende_adherent= amende_adherent + (dec%7)*2
+         WHERE id_adherent = new.id_adherent
+    END;
 
 $$ LANGUAGE plpgsql;
 
@@ -80,12 +81,12 @@ AS $$
     DECLARE
         curs CURSOR FOR SELECT * FROM histoemprunt WHERE id_livre = old.id_livre;
         rec RECORD;
-    begin
+    BEGIN
         FOR rec IN curs 
         LOOP
-            rec.id_livre = null;
+            rec.id_livre = NULL;
         END LOOP;
-    end;
+    END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER livresuppr AFTER DELETE
@@ -95,11 +96,11 @@ EXECUTE PROCEDURE majHisto()
 /* 7 */
 CREATE FUNCTION checkDelete() RETURNS TRIGGER
 AS $$
-    if old.id_livre = null then
+    IF old.id_livre = NULL THEN
         RETURN old;
-    elsif old.date_retour = old.date_emprunt then
+    elsIF old.date_retour = old.date_emprunt THEN
         RETURN old;
-    end if;
+    END IF;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER suppHistoEmp BEFORE DELETE
@@ -112,15 +113,15 @@ ALTER TABLE livre ADD sorti BOOLEAN DEFAULT FALSE;
 /* 9 */
 CREATE FUNCTION majSorti() RETURNS TRIGGER
 AS $$
-    if sorti = TRUE then
-        update livre
-        set sorti = FALSE
-        where id_livre = old.id_livre
+    IF sorti = TRUE THEN
+        UPDATE livre
+        SET sorti = FALSE
+        WHERE id_livre = old.id_livre
     else
-        update livre
-        set sorti = TRUE
-        where id_livre = old.id_livre
-    end if;
+        UPDATE livre
+        SET sorti = TRUE
+        WHERE id_livre = old.id_livre
+    END IF;
     
 $$ LANGUAGE plpgsql;
 
