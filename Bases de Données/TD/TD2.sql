@@ -62,7 +62,7 @@ EXECUTE PROCEDURE peutEmprunter();
 CREATE FUNCTION retard() RETURNS TRIGGER
 AS $$ 
     DECLARE 
-        dec INTEGER := DATEDIFF(day, new.date_retour, new.date_emprunt)
+        dec INTEGER := new.date_emprunt - new.date_retour;
     BEGIN
         UPDATE adherent
            SET amende_adherent= amende_adherent + (dec%7)*2
@@ -91,16 +91,18 @@ $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER livresuppr AFTER DELETE
 ON livre FOR EACH ROW
-EXECUTE PROCEDURE majHisto()
+EXECUTE PROCEDURE majHisto();
 
 /* 7 */
 CREATE FUNCTION checkDelete() RETURNS TRIGGER
 AS $$
-    IF old.id_livre = NULL THEN
-        RETURN old;
-    elsIF old.date_retour = old.date_emprunt THEN
-        RETURN old;
-    END IF;
+    BEGIN
+        IF old.id_livre = NULL THEN
+            RETURN old;
+        elsIF old.date_retour = old.date_emprunt THEN
+            RETURN old;
+        END IF;
+    END;
 $$ LANGUAGE plpgsql;
 
 CREATE TRIGGER suppHistoEmp BEFORE DELETE
@@ -125,8 +127,23 @@ AS $$
     
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER livreSort AFTER INSERT, DELETE
+CREATE TRIGGER updateDispoLivre AFTER INSERT, DELETE
 ON emprunt FOR EACH ROW
 EXECUTE PROCEDURE majSorti();
 
 /* 10 */
+ALTER TABLE livre ADD reserve_adh BOOLEAN DEFAULT FALSE;
+
+/* 11 */
+CREATE FUNCTION isReserved() RETURNS TRIGGER
+AS $$
+    if condition then
+      
+    else
+      
+    end if;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER empruntreserve AFTER INSERT
+ON emprunt FOR EACH ROW
+EXECUTE PROCEDURE isReserved();
