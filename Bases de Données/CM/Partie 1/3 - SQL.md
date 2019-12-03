@@ -59,7 +59,7 @@ Suite à une panne, on doit veiller à deux choses:
 - les modifications non validées au moment de la panne sont bien effacées de la base de données.  
 
 Exemple: 
-![SCH5](../CM/Schemas/SCH5.jpg)
+![SCH5](./Schemas/SCH5.jpg)
 
 Journal des images avant: On enregistre dans un fichier système:
 + images (valeurs) avant modification des données mises à jours (+ identité dans la transaction)

@@ -32,11 +32,11 @@ Donc un verrou en lecture permet à d'autres transactions de poser le même verr
 Aucune opération de verrouillage (LOCK) ne peut suivre une opération de déverrouillage (UNLOCK).  
     $\rightarrow$ 2 phases: verrouillage puis déverrouillage.
 
-![Schema 2](../CM/Schemas/SCH2.jpg)
+![Schema 2](./Schemas/SCH2.jpg)
 
 ## Problèmes possibles avec 2PL(non strict): avortements en cascade
 
-![Schema 3](../CM/Schemas/SCH3.jpg)
+![Schema 3](./Schemas/SCH3.jpg)
 
 _Problème_: T$_2$ a validé mais a utilisé une donnée modifiée par T$_1$ qui a avorté:
 * Perte de la cohérence de la base
@@ -61,7 +61,7 @@ Donc:
 
 ## Problèmes avec 2PL: Deadlock
 
-![Schema 4](../CM/Schemas/SCH4.jpg)
+![Schema 4](./Schemas/SCH4.jpg)
 
 2 solutions possibles:
 + éviter les blocages (difficile, performances)
