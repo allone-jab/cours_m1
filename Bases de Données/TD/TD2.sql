@@ -99,7 +99,7 @@ AS $$
     BEGIN
         IF old.id_livre = NULL THEN
             RETURN old;
-        elsIF old.date_retour = old.date_emprunt THEN
+        ELSIF old.date_retour = old.date_emprunt THEN
             RETURN old;
         END IF;
     END;
